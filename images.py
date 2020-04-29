@@ -16,8 +16,12 @@ def STSimport():
 
 	#Load the image
 	image = cv.imread(src_path)
-
-	#there I should raise exceptions :)
+	
+	#Check!
+	while image is None:
+		print("Invalid path. Please try again!")
+		src_path = str(input())
+		image = cv.imread(src_path)
 
 	return image
 
@@ -33,9 +37,19 @@ def STSconvert(source):
 
 	#Ask user about the size of the pattern
 	print("Please type the desired size of the pattern (in number of stitches in the largest dimension):")
-	user_max = int(input())
+	user_max = input()
 
-	#there I should raise exceptions :)
+	#Check and convert
+	try:
+		user_max = int(user_max)
+	except ValueError:
+		print("Invalid size. Size should be an integer between 1 and {}.\n".format(src_max))
+		return source
+	else:
+		if user_max >= src_max:
+			print("Invalid size. Size should be an integer between 1 and {}.\n".format(src_max))
+			return source
+
 
 	#Find the dimensions of the pattern
 	
