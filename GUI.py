@@ -37,6 +37,9 @@ class Interface(Frame):
 		self.pattern = None
 		self.ptn_width = 0
 		self.ptn_height = 0
+		self.outcome = None
+		self.out_width = 0
+		self.out_height = 0
 		self.F = 0
 		self.img = None
 
@@ -182,14 +185,34 @@ class Interface(Frame):
 	def STSshowpattern(self):
 
 
-		#Show the pattern in the canvas
+		#Show the outcome in the canvas
+		#The idea is to make the pattern more readable by increasing the size of each pixel and adding a grid
 		
+		#Create the outcome image
+		self.out_width = self.F * self.ptn_width
+		self.out_height = self.F * self.ptn_height
+		self.outcome = np.zeros((self.out_height, self.out_width, 3), dtype = self.image.dtype)
+
+		for i in range(0, self.ptn_height):
+			for j in range(0, self.ptn_width):
+				for a in range(i*self.F,(i+1)*self.F):
+					for b in range(j*self.F,(j+1)*self.F):
+						self.outcome[a,b] = self.pattern[i,j]
+		
+
+		#Refresh the canvas
 		self.canvas.delete(ALL)
-		self.canvas.config(width=self.ptn_width, height=self.ptn_height)				#adjusting canvas to pattern size
-		self.img = cv.cvtColor(self.pattern, cv.COLOR_BGR2RGB)							#convert it to RGB
-		self.img = Image.fromarray(self.img, 'RGB')										#convert it to PIL format
-		self.img = ImageTk.PhotoImage(image=self.img)									#convert it to Tkinter format
-		self.canvas.create_image(self.ptn_width/2, self.ptn_height/2, image=self.img)	#and finally show it into the canvas
+		self.canvas.config(width=self.out_width, height=self.out_height)					#adjusting canvas to outcome size
+		
+		#Display the outcome
+		self.img = cv.cvtColor(self.outcome, cv.COLOR_BGR2RGB)								#convert it to RGB
+		self.img = Image.fromarray(self.img, 'RGB')											#convert it to PIL format
+		self.img = ImageTk.PhotoImage(image=self.img)										#convert it to Tkinter format
+		self.canvas.create_image(self.out_width/2, self.out_height/2, image=self.img)		#and finally show it into the canvas
+
+		#Display the grid
+
+
 
 	def STSsave(self):
 		"""This method saves the pattern to a file on user's computer."""
@@ -205,7 +228,7 @@ class Interface(Frame):
 		ptn_path = tkinter.filedialog.asksaveasfilename(filetypes=STS_files, defaultextension='.png')
 
 		#Save the pattern into that file
-		cv.imwrite(ptn_path, self.pattern)
+		cv.imwrite(ptn_path, self.outcome)
 
 
 	
