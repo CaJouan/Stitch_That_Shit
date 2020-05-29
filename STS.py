@@ -2,15 +2,18 @@
 # -*-coding:Utf-8 -*
 
 #modules
-from images import *
-import matplotlib.pyplot as plt
-
-#image load
-src_img = STSimport()
-
-#conversion into a Xstitch pattern
-pattern = STSconvert(src_img)
+from GUI import *
+from tkinter import *
 
 
-plt.imshow(pattern[..., ::-1])	#affichage
-plt.show()
+# Master widget and GUI creation
+window = Tk()
+window.title("Stitch That Shit !")
+interface = Interface(window)
+
+
+# Mainloop -> ready for events
+window.mainloop()
+
+# Closing the window
+window.destroy()
